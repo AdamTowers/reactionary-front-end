@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Canvas from './Canvas'
-import SocketIOClient from 'socket.io-client';
+import ActionCable from 'actioncable'
 
 class CanvasContainer extends Component {
   constructor(){
@@ -14,7 +14,6 @@ class CanvasContainer extends Component {
     this.canvas = {}
     this.xOffset = 0
     this.yOffset = 0
-    this.socket = SocketIOClient('http://localhost:3001');
   }
 
   componentDidMount(){
@@ -25,15 +24,21 @@ class CanvasContainer extends Component {
     ctx.lineWidth=3;
     ctx.save()
 
-    this.socket.on('draw', (line) => {
-      if(line){
-        this.drawLine(ctx, line.x, line.y, this.originX, this.originY)
-        console.log('receiving draw line')
+    const cable = ActionCable.createConsumer('ws://localhost:3002/cable')
+    this.sub = cable.subscriptions.create(
+      {channel: 'RoomsChannel'}, {
+        connected: function() {
+          console.log("connected");
+        },
+        disconnected: function() {
+          console.log("disconnected");
+        },
+        received: function(data){
+          console.log(data)
+        }
       }
-        });
-
-    this.socket.on('begin-path', () => this.beginPath)
-    this.socket.on('close-path', () => this.closePath)
+    )
+    this.sub.send({user_id: 2, room_id: 1})
   }
 
   onMouseDown = (e) => {
@@ -46,7 +51,6 @@ class CanvasContainer extends Component {
       coordinates: [mouseX, mouseY]
     })
     this.beginPath()
-    this.socket.on('begin-path')
   }
 
   onMouseMove = (e) => {
@@ -63,20 +67,21 @@ class CanvasContainer extends Component {
 
       this.drawLine(e.target.getContext('2d'), mouseX, mouseY, this.state.coordinates[0], this.state.coordinates[1])
       console.log('sending drawing line')
-      this.socket.emit('draw', {x: mouseX, y: mouseY})
+
+      this.sub.send({
+        to: "rooms_test",
+        message: {x: mouseX, y: mouseY}
+      })
+
     }
   }
 
   onMouseOut = () => {
     this.isDown = false
-    this.socket.emit('close-path')
-    this.closePath()
   }
 
   onMouseUp = () => {
     this.isDown = false
-    this.socket.emit('close-path')
-    this.closePath()
   }
 
   beginPath = () => {
