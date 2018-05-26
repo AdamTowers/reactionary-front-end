@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
+import React, {
+  Component
+} from 'react';
 import Canvas from './Canvas'
 import ActionCable from 'actioncable'
 
 class CanvasContainer extends Component {
-  constructor(){
+  constructor() {
     super()
     this.state = {
       tool: {},
-      coordinates: [100,100],
+      coordinates: [100, 100],
       ctx: {}
     }
     this.isDown = false
@@ -16,41 +18,57 @@ class CanvasContainer extends Component {
     this.yOffset = 0
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.canvas = document.getElementById('canvas')
     this.xOffset = this.getOffset(this.canvas).x
     this.yOffset = this.getOffset(this.canvas).y
     const ctx = this.canvas.getContext('2d')
-    ctx.lineWidth=3;
+    ctx.lineWidth = 3;
     ctx.save()
 
-    const cable = ActionCable.createConsumer('ws://localhost:3002/cable')
-    this.sub = cable.subscriptions.create(
-      {channel: 'RoomsChannel'}, {
-        connected: function() {
-          console.log("connected");
-        },
-        disconnected: function() {
-          console.log("disconnected");
-        },
-        received: function(data){
-          console.log(data)
+    const cable = ActionCable.createConsumer('ws://localhost:3001/cable')
+    this.sub = cable.subscriptions.create({
+      channel: 'CanvasChannel'
+    }, {
+      connected: () => {
+        console.log("connected");
+      },
+      disconnected: () => {
+        console.log("disconnected");
+      },
+      received: (data) => {
+        console.log('received: '+data.message.action)
+        if (data.message.action === 'mouseDown') {
+          this.beginPath(data.message.x, data.message.y)
+          console.log('begin path')
+        } else if (data.message.action === 'mouseUp' || data.message.action === 'mouseOut') {
+          console.log('close path')
+          this.closePath()
+        } else if (data.message.action === 'mouseMove') {
+          this.drawLine(data.message.x - this.xOffset, data.message.y - this.yOffset)
+
         }
       }
-    )
-    this.sub.send({user_id: 2, room_id: 1})
+    })
   }
 
   onMouseDown = (e) => {
     e.persist()
     this.isDown = true
-    this.canvas.getContext('2d').beginPath();
     const mouseX = e.clientX - this.xOffset
     const mouseY = e.clientY - this.yOffset
-    this.setState({
-      coordinates: [mouseX, mouseY]
+
+    this.beginPath(mouseX, mouseY);
+
+    this.sub.send({
+      to: "canvas",
+      message: {
+        action: 'mouseDown',
+        x: mouseX,
+        y: mouseY
+      }
     })
-    this.beginPath()
+    console.log('mousedown sent')
   }
 
   onMouseMove = (e) => {
@@ -59,61 +77,103 @@ class CanvasContainer extends Component {
       e.stopPropagation();
       const mouseX = e.clientX - this.xOffset
       const mouseY = e.clientY - this.yOffset
-
-      this.drawLine(e.target.getContext('2d'), mouseX, mouseY, this.state.coordinates[0], this.state.coordinates[1]);
-      this.setState({
-        coordinates: [mouseX, mouseY]
-      })
-
-      this.drawLine(e.target.getContext('2d'), mouseX, mouseY, this.state.coordinates[0], this.state.coordinates[1])
-      console.log('sending drawing line')
-
+      this.drawLine(mouseX, mouseY)
       this.sub.send({
-        to: "rooms_test",
-        message: {x: mouseX, y: mouseY}
+        to: "canvas",
+        message: {
+          action: 'mouseMove',
+          x: mouseX,
+          y: mouseY
+        },
       })
-
     }
   }
 
-  onMouseOut = () => {
-    this.isDown = false
+  onMouseOut = (e) => {
+    e.persist()
+    this.closePath()
+    this.sub.send({
+      to: "canvas",
+      message: {
+        action: 'mouseUp',
+        x: e.clientX,
+        y: e.clientY
+      },
+    })
   }
 
-  onMouseUp = () => {
-    this.isDown = false
+  onMouseUp = (e) => {
+    e.persist()
+    console.log('mouse up event sent')
+    this.closePath()
+    this.sub.send({
+      to: "canvas",
+      message: {
+        action: 'mouseUp',
+        x: e.clientX,
+        y: e.clientY
+      },
+    })
   }
 
-  beginPath = () => {
+  beginPath = (x,y) => {
+    this.setState({
+      coordinates: [x,y]
+    })
     this.canvas.getContext('2d').beginPath()
   }
+
   closePath = () => {
-    this.canvas.getContext('2d').closePath();
+    if(this.isDown){
+      this.isDown = false
+      this.canvas.getContext('2d').closePath();
+      // debugger
+    }
   }
 
-  drawLine = (ctx, x, y, originX, originY) => {
-    ctx.moveTo(originX, originY)
+  drawLine = (x, y) => {
+    const ctx = this.canvas.getContext('2d')
+    const coord = this.state.coordinates
+    ctx.moveTo(coord[0], coord[1])
     ctx.lineTo(x, y)
     ctx.stroke()
+    this.setState({
+      coordinates: [x, y]
+    })
   }
 
   getOffset = (ele) => {
     let x = 0;
     let y = 0;
 
-    while(ele){
+    while (ele) {
       x += ele.offsetLeft - ele.scrollLeft + ele.clientLeft;
       y += ele.offsetTop - ele.scrollTop + ele.clientTop;
       ele = ele.offsetParent;
     }
-    return {x: x, y: y}
+    return {
+      x: x,
+      y: y
+    }
   }
 
   render() {
     return (
-      <div className="canvas-container">
-        <Canvas onMouseOut={this.onMouseOut} onMouseDown={this.onMouseDown.bind(this)} onMouseMove={this.onMouseMove.bind(this)} onMouseUp={this.onMouseUp.bind(this)}/>
-      </div>
+      <div className = "canvas-container" >
+        <Canvas onMouseOut = {
+          this.onMouseOut
+        }
+        onMouseDown = {
+          this.onMouseDown.bind(this)
+        }
+        onMouseMove = {
+          this.onMouseMove.bind(this)
+        }
+        onMouseUp = {
+          this.onMouseUp.bind(this)
+        }
+        />
+    </div>
     );
   }
 
