@@ -25,7 +25,7 @@ class App extends Component {
   //   this.sub.send({user_id: 2, room_id: 1})
   // }
 
-login = (username, password) => {
+login = (username, password, callback) => {
   fetch('http://localhost:3000/api/v1/sessions', {
     method: 'POST',
     headers: {
@@ -37,6 +37,14 @@ login = (username, password) => {
       password: password,
     })
   })
+  .then(res => res.json())
+  .then(json => {
+    localStorage.setItem('token', json.token)
+    localStorage.setItem('user_id', json.user_id)
+    localStorage.setItem('username', json.username)
+
+    callback("/")
+  })
 }
 
 register = (username, password) => {
@@ -47,9 +55,9 @@ register = (username, password) => {
    return (
      <Router>
        <div>
-         <Route exact path="/" render={<CanvasContainer />} />
-         <Route path="/login" render={(props) => <UserForm submitLabel="Login" onSubmit={this.login}/>} />
-         <Route path="/register" render={(props) => <UserForm submitLabel="Register" onSubmit={this.register} />} />
+         <Route exact path="/" component={CanvasContainer} />
+         <Route path="/login" render={(props) => <UserForm submitLabel="Login" onSubmit={this.login} {...props} />} />
+         <Route path="/register" render={(props) => <UserForm submitLabel="Register" onSubmit={this.register} {...props} />} />
        </div>
      </Router>
    );

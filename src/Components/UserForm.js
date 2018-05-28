@@ -15,8 +15,7 @@ export default class UserForm extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
-
-    this.props.onSubmit(this.state.username, this.state.password)
+    this.props.onSubmit(this.state.username, this.state.password, this.props.history.push)
   }
 
   render() {
@@ -39,7 +38,7 @@ export default class UserForm extends Component {
           <div>
             <label htmlFor="password">Password</label>
             <input
-              type="text"
+              type="password"
               name="password"
               placeholder="Password"
               onChange={this.handleChange}
