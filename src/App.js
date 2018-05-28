@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
+import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
 import CanvasContainer from './Components/CanvasContainer'
 import './App.css'
 import ActionCable from 'actioncable'
+
+import UserForm from './Components/UserForm'
 
 class App extends Component {
   // componentDidMount() {
@@ -22,9 +25,33 @@ class App extends Component {
   //   this.sub.send({user_id: 2, room_id: 1})
   // }
 
+login = (username, password) => {
+  fetch('http://localhost:3000/api/v1/sessions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({
+      username: username,
+      password: password,
+    })
+  })
+}
+
+register = (username, password) => {
+  // fetch('http://localhost:3000/api/v1/users')
+}
+
  render() {
    return (
-     <CanvasContainer />
+     <Router>
+       <div>
+         <Route exact path="/" render={<CanvasContainer />} />
+         <Route path="/login" render={(props) => <UserForm submitLabel="Login" onSubmit={this.login}/>} />
+         <Route path="/register" render={(props) => <UserForm submitLabel="Register" onSubmit={this.register} />} />
+       </div>
+     </Router>
    );
  }
 
