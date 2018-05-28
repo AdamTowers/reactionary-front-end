@@ -109,10 +109,17 @@ class CanvasContainer extends Component {
     return {x: x, y: y}
   }
 
+
   render() {
     return (
       <div className="canvas-container">
-        <Canvas onMouseOut={this.onMouseOut} onMouseDown={this.onMouseDown.bind(this)} onMouseMove={this.onMouseMove.bind(this)} onMouseUp={this.onMouseUp.bind(this)}/>
+        <h1>Our room will go here!</h1>
+        <Canvas
+          onMouseOut={this.onMouseOut}
+          onMouseDown={this.onMouseDown.bind(this)}
+          onMouseMove={this.onMouseMove.bind(this)}
+          onMouseUp={this.onMouseUp.bind(this)}
+        />
       </div>
     );
   }

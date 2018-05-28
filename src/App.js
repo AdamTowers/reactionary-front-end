@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
+import { BrowserRouter as Router, Redirect, Route, NavLink } from 'react-router-dom'
 import CanvasContainer from './Components/CanvasContainer'
 import './App.css'
-import ActionCable from 'actioncable'
 
 import UserForm from './Components/UserForm'
 
@@ -47,8 +46,23 @@ login = (username, password, callback) => {
   })
 }
 
-register = (username, password) => {
-  // fetch('http://localhost:3000/api/v1/users')
+register = (username, password, callback) => {
+  fetch('http://localhost:3000/api/v1/users', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    },
+    body: JSON.stringify({ username, password })
+  })
+  .then(res => res.json())
+  .then(json => {
+    localStorage.setItem('token', json.token)
+    localStorage.setItem('user_id', json.user_id)
+    localStorage.setItem('username', json.username)
+
+    callback("/")
+  })
 }
 
  render() {
@@ -58,6 +72,12 @@ register = (username, password) => {
          <Route exact path="/" component={CanvasContainer} />
          <Route path="/login" render={(props) => <UserForm submitLabel="Login" onSubmit={this.login} {...props} />} />
          <Route path="/register" render={(props) => <UserForm submitLabel="Register" onSubmit={this.register} {...props} />} />
+         {
+           localStorage.getItem('token') ?
+            <Route exact path="/" component={CanvasContainer} />
+            :
+            <Redirect to="/register" />
+         }
        </div>
      </Router>
    );

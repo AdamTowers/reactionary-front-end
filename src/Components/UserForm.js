@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ActionCable from 'actioncable'
 
 export default class UserForm extends Component {
   state = {
