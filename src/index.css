@@ -3,3 +3,25 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.roomlist-container{
+  width:60%;
+  margin: 0 auto;
+
+}
+
+#login, #register {
+  width: 60%;
+  margin: 0 auto;
+}
+
+#canvas {
+  border: 1px solid black;
+}
+
+#room {
+  display:flex;
+}
+.ui.page.modals.transition.visible {
+    display: flex !important;
+}

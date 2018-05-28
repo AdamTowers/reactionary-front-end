@@ -1,6 +1,4 @@
-import React, {
-  Component
-} from 'react';
+import React, {Component} from 'react';
 import Canvas from './Canvas'
 import ActionCable from 'actioncable'
 
@@ -27,9 +25,10 @@ class CanvasContainer extends Component {
     ctx.save()
 
     const cable = ActionCable.createConsumer('ws://localhost:3001/cable')
-    this.sub = cable.subscriptions.create({
-      channel: 'CanvasChannel'
-    }, {
+      this.sub = cable.subscriptions.create({
+        channel: 'CanvasChannel',
+        
+      }, {
       connected: () => {
         console.log("connected");
       },
@@ -46,11 +45,13 @@ class CanvasContainer extends Component {
           this.closePath()
         } else if (data.message.action === 'mouseMove') {
           this.drawLine(data.message.x - this.xOffset, data.message.y - this.yOffset)
-
         }
       }
     })
   }
+
+
+
 
   onMouseDown = (e) => {
     e.persist()
@@ -174,7 +175,7 @@ class CanvasContainer extends Component {
         }
         />
     </div>
-    );
+    )
   }
 
 }
