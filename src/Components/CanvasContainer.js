@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Canvas from './Canvas'
 import ActionCable from 'actioncable'
+import { Button} from 'semantic-ui-react'
 
 class CanvasContainer extends Component {
   constructor(props) {
@@ -159,10 +160,15 @@ class CanvasContainer extends Component {
       y: y
     }
   }
+  clearCanvas = () => {
+    const context = this.canvas.getContext('2d');
+    context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
 
   render() {
     return (
       <div className = "canvas-container" >
+
         <Canvas onMouseOut = {
           this.onMouseOut
         }
@@ -176,6 +182,7 @@ class CanvasContainer extends Component {
           this.onMouseUp.bind(this)
         }
         />
+      <Button onClick={this.clearCanvas}>Clear</Button>
     </div>
     )
   }
