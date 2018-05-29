@@ -3,7 +3,7 @@ import UserListContainer from '../components/UserListContainer'
 import MessageListContainer from '../components/MessageListContainer'
 import CanvasContainer from '../components/CanvasContainer'
 import ActionCable from 'actioncable'
-
+import { Button} from 'semantic-ui-react'
 class Room extends Component {
   constructor(props){
     super(props)
@@ -39,6 +39,16 @@ class Room extends Component {
     const cable = ActionCable.createConsumer('ws://localhost:3001/cable')
     that.createSubscription(that.room, cable)
   }
+
+  // componentWillUnmount = () => {
+  //   console.log('unmounted')
+  //   this.sub['game_'+this.room].send({
+  //     to: 'game_'+this.room,
+  //     type: 'disconnect',
+  //     isReady: true,
+  //     user_id: parseInt(localStorage.user_id)
+  //   })
+  // }
 
   createSubscription = (room, cable) => {
     const that = this
@@ -158,17 +168,18 @@ class Room extends Component {
           artistId: randomUser,
           word: r
         })
-
-
-
       })
 
-
       //grab user to be the artist
-
       //give user the word
       //start a timer for everyone
     // }
+  }
+
+  leaveRoom = () => {
+    this.sub['game_'+this.room].unsubscribe()
+    delete this.sub['game_'+this.room]
+    this.props.history.push('/')
   }
 
   render() {
@@ -176,10 +187,10 @@ class Room extends Component {
       <div id="room">
         <div id="top">
           { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
-          <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
+          <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages}/>
         </div>
-         <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages}/>
-
+        <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
+         <Button onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
       </div>
     )
   }
