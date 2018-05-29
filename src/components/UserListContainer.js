@@ -12,6 +12,7 @@ class UserListContainer extends Component {
 
   clickReady = (e) => {
     console.log(e.target)
+    this.props.clickReady(e.target)
   }
 
   render() {
@@ -19,7 +20,7 @@ class UserListContainer extends Component {
     return(
       <div id="user-container" className="ui celled list">
         {users}
-        {parseInt(localStorage.user_id) === parseInt(this.props.hostId) ? <button>Start game</button> : ""}
+        {parseInt(localStorage.user_id) === parseInt(this.props.hostId) ? <button onClick={this.clickReady}>Start game</button> : ""}
       </div>
     )
   }

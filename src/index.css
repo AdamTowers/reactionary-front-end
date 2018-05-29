@@ -32,19 +32,20 @@ body {
   bottom: 0;
   width:100%;
   border: 1px solid black;
+  display:block;
 }
 
 #message-box{
   height:400px;
+  display:block;
 }
 
 #message-container {
   border: 1px solid red;
   width: 100%;
   bottom:0;
-  position:absolute;
-
+display:block;
 }
 #top {
-   display:inline-block;
+   display:block;
 }

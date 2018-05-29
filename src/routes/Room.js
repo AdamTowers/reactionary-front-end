@@ -12,7 +12,11 @@ class Room extends Component {
       isMessageListLoaded: true,
       isUserListLoaded: false,
       messages: [],
-      host_id:0
+      host_id: 0,
+      isReady: false,
+      artistId: "",
+      word: "",
+      aftermath: false
     }
     this.room = this.props.match.params.id
     this.sub = {}
@@ -40,7 +44,8 @@ class Room extends Component {
     const that = this
     that.sub['game_'+ that.room] = cable.subscriptions.create({
       channel: 'GamesChannel',
-      room: 'game_'+ that.room
+      room: 'game_'+ that.room,
+      user_id: localStorage.user_id
     }, {
     connected: () => {
       console.log(that.sub)
@@ -48,6 +53,14 @@ class Room extends Component {
     },
     disconnected: () => {
       console.log("disconnected/ logged out");
+      //
+      // this.sub['game_' + this.room].send({
+      //   to: 'game_'+this.room,
+      //   type: 'disconnect',
+      //   user_id: localStorage.user_id,
+      // })
+      // cable.subscriptions.remove(this.sub)
+      // this.perform('unsubscribed')
     },
     received: (data) => {
       console.log(data)
@@ -57,6 +70,33 @@ class Room extends Component {
         messages.push({username: data.username, content: data.content})
         that.setState({
           messages: messages
+        })
+
+        if(data.content == that.state.word.content){
+          console.log(data.username+' wins! The word is: '+ data.content)
+          alert(data.username+' wins! The word is: '+ data.content)
+          const messages = this.state.messages
+          messages.push({username: 'Admin', content: data.username+' wins! The word is: '+ data.content})
+          this.setState({
+            messages: messages,
+            aftermath: true
+          })
+        }
+      } else if(data.type ==='start_game'){
+        if(localStorage.user_id === data.artistId){
+          console.log('asldjfalsjdf')
+          console.log(data.word.content)
+          alert('You\'re the current artist. Your word is: '+ data.word.content)
+        }
+
+        that.setState({
+          isReady: true,
+          artistId: data.artistId,
+          word: data.word
+        })
+      } else if(data.type ==='disconnect'){
+        that.setState({
+          users: that.state.users.filter(u => parseInt(u.id) !== parseInt(data.userId))
         })
       }
 
@@ -76,13 +116,59 @@ class Room extends Component {
   }
 
   sendMessage = (e) => {
-    this.sub['game_' + this.room].send({
-      to: 'game_'+this.room,
-      type: 'message',
-      content: e.target.querySelector('input').value,
-      user_id: localStorage.user_id,
-      username: localStorage.username
-    })
+    const msg = e.target.querySelector('input').value
+    if(localStorage.user_id === this.artistId && msg && msg !== "" && msg.toLowerCase().indexOf(this.state.word.content.toLowerCase()) > -1) {
+      const messages = this.state.messages
+      messages.push({username: 'Admin', content: 'You can\'t compete this round'})
+      this.setState({
+        messages: messages
+      })
+      /*
+      var string = "foo",
+          expr = /oo/;
+      string.match(expr);
+      */
+    }else {
+        this.sub['game_' + this.room].send({
+        to: 'game_'+this.room,
+        type: 'message',
+        content: msg,
+        user_id: localStorage.user_id,
+        username: localStorage.username
+      })
+
+    }
+    e.target.querySelector('input').value = ""
+  }
+  clickReady = (e) => {
+    // if(this.state.users){
+    const that = this
+      fetch('http://localhost:3001/api/v1/random-word').then(res => res.json()).then(r => {
+        const randomUser = that.state.users[Math.floor(Math.random()*that.state.users.length)].id
+        that.setState({
+          isReady: true,
+          artistId: randomUser,
+          word: r
+        })
+
+        that.sub['game_'+that.room].send({
+          to: 'game_'+that.room,
+          type: 'start_game',
+          isReady: true,
+          artistId: randomUser,
+          word: r
+        })
+
+
+
+      })
+
+
+      //grab user to be the artist
+
+      //give user the word
+      //start a timer for everyone
+    // }
   }
 
   render() {
@@ -90,9 +176,10 @@ class Room extends Component {
       <div id="room">
         <div id="top">
           { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
-          <UserListContainer hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
+          <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
         </div>
-        <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages}/>
+         <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages}/>
+
       </div>
     )
   }
