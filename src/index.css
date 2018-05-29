@@ -15,11 +15,7 @@
   margin: 0 auto;
 }
 
-#canvas {
-  border: 1px solid black;
 
-  display:inline-block;
-}
 
 #room {
   display:flex;
@@ -49,3 +45,8 @@ display:block;
 #top {
    display:block;
 } */
+
+#canvas {
+  border: 1px solid black;
+
+}

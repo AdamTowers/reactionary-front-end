@@ -160,10 +160,7 @@ class CanvasContainer extends Component {
       y: y
     }
   }
-  clearCanvas = () => {
-    const context = this.canvas.getContext('2d');
-    context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  }
+
 
   render() {
     return (
@@ -182,7 +179,7 @@ class CanvasContainer extends Component {
           this.onMouseUp.bind(this)
         }
         />
-      <Button onClick={this.clearCanvas}>Clear</Button>
+
     </div>
     )
   }
