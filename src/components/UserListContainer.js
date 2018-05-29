@@ -4,28 +4,22 @@ import UserListItem from './UserListItem'
 class UserListContainer extends Component {
   constructor(props){
     super(props)
-    this.state = {
-      users: []
-    }
   }
 
   componentDidMount(){
-    if(this.props.roomId)
-      fetch('http://localhost:3001/api/v1/user_room/'+this.props.roomId).then(r => r.json()).then(res => {
-        this.setState({
-          users: res.data
-        })
-        this.props.setUserLoaded()
-      })
+    this.props.setUserLoaded()
+  }
 
+  clickReady = (e) => {
+    console.log(e.target)
   }
 
   render() {
-    console.log('rendering')
-    const users = this.state.users.map(u => <UserListItem key={u.id} user={u.attributes} /> )
+    const users = this.props.users.map(u => <UserListItem key={u.id} user={u.attributes} /> )
     return(
-      <div className="ui celled list">
+      <div id="user-container" className="ui celled list">
         {users}
+        {parseInt(localStorage.user_id) === parseInt(this.props.hostId) ? <button>Start game</button> : ""}
       </div>
     )
   }

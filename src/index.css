@@ -17,6 +17,8 @@ body {
 
 #canvas {
   border: 1px solid black;
+  /* position:absolute; */
+  display:inline-block;
 }
 
 #room {
@@ -24,4 +26,25 @@ body {
 }
 .ui.page.modals.transition.visible {
     display: flex !important;
+}
+
+#message-form {
+  bottom: 0;
+  width:100%;
+  border: 1px solid black;
+}
+
+#message-box{
+  height:400px;
+}
+
+#message-container {
+  border: 1px solid red;
+  width: 100%;
+  bottom:0;
+  position:absolute;
+
+}
+#top {
+   display:inline-block;
 }

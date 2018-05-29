@@ -10,9 +10,6 @@ class RoomListContainer extends Component {
   }
 
   componentDidMount() {
-
-
-
   }
 
   joinRoom = (e) => {
@@ -22,7 +19,7 @@ class RoomListContainer extends Component {
   }
 
   render() {
-    const items = this.props.rooms.map(r => <RoomListItem id={r.id} key={r.id} onClick={this.joinRoom.bind(this)} users={r.relationships.users.data.length} room={r.attributes}/>)
+    const items = this.props.rooms.map(r => <RoomListItem id={r.id} key={r.id} hostId={r.attributes['user-id']} onClick={this.joinRoom.bind(this)} users={r.relationships.users.data.length} room={r.attributes}/>)
     return(
       <div className="roomlist-container">
         <div className="ui middle aligned selection list">

@@ -3,8 +3,8 @@ import Canvas from './Canvas'
 import ActionCable from 'actioncable'
 
 class CanvasContainer extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       tool: {},
       coordinates: [100, 100],
@@ -27,7 +27,10 @@ class CanvasContainer extends Component {
     const cable = ActionCable.createConsumer('ws://localhost:3001/cable')
       this.sub = cable.subscriptions.create({
         channel: 'CanvasChannel',
-        
+        room: 'canvas_' + this.props.roomId,
+        room_id: this.props.roomId,
+        user_id: localStorage.user_id,
+        username: localStorage.username
       }, {
       connected: () => {
         console.log("connected");
@@ -51,8 +54,6 @@ class CanvasContainer extends Component {
   }
 
 
-
-
   onMouseDown = (e) => {
     e.persist()
     this.isDown = true
@@ -62,7 +63,7 @@ class CanvasContainer extends Component {
     this.beginPath(mouseX, mouseY);
 
     this.sub.send({
-      to: "canvas",
+      to: 'canvas_' + this.props.roomId,
       message: {
         action: 'mouseDown',
         x: mouseX,
@@ -79,8 +80,9 @@ class CanvasContainer extends Component {
       const mouseX = e.clientX - this.xOffset
       const mouseY = e.clientY - this.yOffset
       this.drawLine(mouseX, mouseY)
+
       this.sub.send({
-        to: "canvas",
+        to: 'canvas_' + this.props.roomId,
         message: {
           action: 'mouseMove',
           x: mouseX,
@@ -94,7 +96,7 @@ class CanvasContainer extends Component {
     e.persist()
     this.closePath()
     this.sub.send({
-      to: "canvas",
+      to: 'canvas_' + this.props.roomId,
       message: {
         action: 'mouseUp',
         x: e.clientX,
@@ -108,7 +110,7 @@ class CanvasContainer extends Component {
     console.log('mouse up event sent')
     this.closePath()
     this.sub.send({
-      to: "canvas",
+      to: 'canvas_' + this.props.roomId,
       message: {
         action: 'mouseUp',
         x: e.clientX,

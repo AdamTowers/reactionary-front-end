@@ -16,7 +16,6 @@ class Home extends Component {
 
   componentDidMount = () => {
     this.setup()
-    console.log(this.sub)
   }
 
   setup = ()=> {
@@ -108,10 +107,11 @@ class Home extends Component {
   }
 
   render(){
+
     return(
       <div>
         <CreateRoomModal onChange={this.onChange} onSubmit={this.createRoom}/>
-        <RoomListContainer rooms={this.state.rooms} joinRoom={this.joinRoom.bind(this)} />
+        <RoomListContainer  rooms={this.state.rooms} joinRoom={this.joinRoom.bind(this)} />
       </div>
     )
   }

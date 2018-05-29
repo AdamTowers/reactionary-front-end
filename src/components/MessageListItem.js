@@ -6,9 +6,8 @@ class MessageListItem extends Component {
     return(
       <div className="item">
         <div className="content">
-          <div className="header">{'hi'}</div>
-          {/* this.props.user.name */}
-          {/* this.props.message */}
+          <div className="header">{this.props.message.username} </div>
+          { this.props.message.content }
         </div>
       </div>
     )
