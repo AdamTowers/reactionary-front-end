@@ -1,4 +1,4 @@
-body {
+/* body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
@@ -14,13 +14,13 @@ body {
   width: 60%;
   margin: 0 auto;
 }
-
-#canvas {
+ */
+canvas {
   border: 1px solid black;
-  /* position:absolute; */
-  display:inline-block;
-}
 
+  /* display:inline-block; */
+}
+/*
 #room {
   display:flex;
 }
@@ -48,4 +48,4 @@ display:block;
 }
 #top {
    display:block;
-}
+} */

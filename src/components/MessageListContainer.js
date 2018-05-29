@@ -9,35 +9,12 @@ class MessageListContainer extends Component {
 
   }
   componentDidMount(){
-    // const cable = ActionCable.createConsumer('ws://localhost:3001/cable')
-    //   this.sub = cable.subscriptions.create({
-    //     channel: 'MessagesChannel'
-    //   }, {
-    //   connected: () => {
-    //     console.log("connected");
-    //     this.props.setMessageLoaded()
-    //   },
-    //   disconnected: () => {
-    //     console.log("disconnected");
-    //   },
-    //   received: (data) => {
-    //     console.log('received: '+data.message.action)
-    //     if (data.message.action === 'mouseDown') {
-    //       this.beginPath(data.message.x, data.message.y)
-    //       console.log('begin path')
-    //     } else if (data.message.action === 'mouseUp' || data.message.action === 'mouseOut') {
-    //       console.log('close path')
-    //       this.closePath()
-    //     } else if (data.message.action === 'mouseMove') {
-    //       this.drawLine(data.message.x - this.xOffset, data.message.y - this.yOffset)
-    //
-    //     }
-    //   }
-    // })
+    this.props.setMessageLoaded()
+
   }
 
   render() {
-    
+
     const messages = this.props.messages.map((m,i) => <MessageListItem key={i} message={m}/>)
     return(
       <div id="message-container">
