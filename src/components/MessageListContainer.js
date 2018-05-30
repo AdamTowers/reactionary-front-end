@@ -15,7 +15,6 @@ class MessageListContainer extends Component {
   }
 
   render() {
-
     const messages = this.props.messages.map((m,i) => <MessageListItem key={i} message={m}/>)
     return(
       <Segment.Group>

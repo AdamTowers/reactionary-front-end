@@ -84,12 +84,16 @@ class Room extends Component {
         })
         if(data.content == that.state.word.content && !that.state.aftermath){
           const messages = that.state.messages
-          messages.push({username: 'Game Bot', content: data.username+' wins! The word is: '+ data.content})
-          that.setState({
-            messages: messages,
-            aftermath: true
-          })
-        }
+
+
+            messages.push({username: 'Game Bot', content: data.username+' wins! The word is: '+ data.content})
+            that.setState({
+              messages: messages,
+              aftermath: true
+            })
+          }
+
+        
       } else if(data.type ==='start_game'){
         if(localStorage.user_id === data.artistId){
           alert('You\'re the current artist. Your word is: '+ data.word.content)
@@ -140,14 +144,14 @@ class Room extends Component {
   }
 
   sendMessage = (e) => {
+
     const msg = e.target.querySelector('input').value
-    if(localStorage.user_id === this.artistId && msg && msg !== "" && msg.toLowerCase().indexOf(this.state.word.content.toLowerCase()) > -1) {
+    if(parseInt(localStorage.user_id) === parseInt(this.state.artistId) && msg && msg !== "" && msg.toLowerCase().indexOf(this.state.word.content.toLowerCase()) > -1) {
       const messages = this.state.messages
-      messages.push({username: 'Game Bot', content: 'You can\'t compete this round'})
+      messages.push({username: 'Game Bot', content: 'Don\'t be like Christian'})
       this.setState({
         messages: messages
       })
-
     } else {
         this.sub['game_' + this.room].send({
         to: 'game_'+this.room,
@@ -230,11 +234,6 @@ class Room extends Component {
       type: 'delete_game',
       user_id: localStorage.user_id,
     })
-    // this.sub['game_'+this.room].send({
-    //   to: 'rooms_'+this.room,
-    //   type: 'delete_game',
-    //   user_id: localStorage.user_id,
-    // })
     this.props.history.push('/')
   }
 
@@ -254,7 +253,7 @@ class Room extends Component {
             <Segment>
 
               { this.isLoaded() ? <CanvasContainer artistId={this.state.artistId} roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
-              { this.isLoaded() && this.isHost() && this.isPartOfRoom() && this.isGameStarted()  ? <Button primary size="small" onClick={this.clearCanvas} >Clear</Button> : "" }
+              { this.isLoaded() && this.isArtist() && this.isPartOfRoom() && this.isGameStarted()  ? <Button primary size="small" onClick={this.clearCanvas} >Clear</Button> : "" }
               { parseInt(localStorage.user_id, 10) === parseInt(this.state.host_id, 10) ? <Button secondary size="small" disabled={disabled} onClick={this.clickReady}>Start game</Button> : "" }
               { parseInt(localStorage.user_id, 10) === parseInt(this.state.host_id, 10) ? <Button secondary size="small" onClick={this.deleteRoom}>Delete room</Button> : "" }
               <Button default size="small" onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
