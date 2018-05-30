@@ -16,12 +16,13 @@ class UserListContainer extends Component {
   }
 
   render() {
-    
+
     const users = this.props.users.map(u => <UserListItem key={u.id} user={u.attributes} /> )
     return(
-      <div id="user-container" className="ui celled list">
+      <div>
+        <h1>Players</h1>
         {users}
-        {parseInt(localStorage.user_id) === parseInt(this.props.hostId) ? <Button onClick={this.clickReady}>Start game</Button> : ""}
+        {parseInt(localStorage.user_id) === parseInt(this.props.hostId) ? <Button primary onClick={this.clickReady}>Start game</Button> : ""}
       </div>
     )
   }

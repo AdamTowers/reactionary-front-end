@@ -3,7 +3,7 @@ import UserListContainer from '../components/UserListContainer'
 import MessageListContainer from '../components/MessageListContainer'
 import CanvasContainer from '../components/CanvasContainer'
 import ActionCable from 'actioncable'
-import { Container, Segment, Button } from 'semantic-ui-react'
+import { Grid, Segment, Button } from 'semantic-ui-react'
 class Room extends Component {
   constructor(props){
     super(props)
@@ -192,36 +192,42 @@ class Room extends Component {
 
   render() {
     return(
-      <Container>
-        <Segment.Group>
+      <Grid columns={2} stackable>
+        <Grid.Column>
           <Segment>
             { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
-            { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <Button onClick={this.clearCanvas}>Clear</Button>: "" }
-            <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages}/>
+            { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <Button secondary size='tiny' onClick={this.clearCanvas}>Clear</Button>: "" }
           </Segment>
-
           <Segment>
             <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
+            <Button secondary size='tiny' onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
           </Segment>
-          <Segment>
-            <Button onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
-          </Segment>
-       </Segment.Group>
-      </Container>
-      {/*
-      <div id="room">
-        <div id="top">
-          { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
-          { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <Button onClick={this.clearCanvas}>Clear</Button>: "" }
-          <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages}/>
-        </div>
-        <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
+        </Grid.Column>
 
-       <Button onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
-      </div> */}
+        <Grid.Column>
+          <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages}/>
+       </Grid.Column>
+     </Grid>
+
     )
   }
 
 }
 
 export default Room
+
+
+//Old JSX, in case we can't fix the positioning of the canvas
+
+/*
+<div id="room">
+  <div id="top">
+    { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
+    { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <Button onClick={this.clearCanvas}>Clear</Button>: "" }
+    <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages}/>
+  </div>
+  <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
+
+ <Button onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
+</div>
+*/
