@@ -77,7 +77,6 @@ class Room extends Component {
 
     },
     disconnected: () => {
-      console.log("disconnected/ logged out");
     },
     received: (data) => {
 
@@ -110,11 +109,10 @@ class Room extends Component {
         })
       } else if(data.type ==='disconnect'){
         let messages = that.state.messages
-        console.log('disconnect')
         messages.push({username: 'Game Bot', content: data.username+' left the room.'})
         that.setState({
           users: that.state.users.filter(u => parseInt(u.id) !== parseInt(data.userId)),
-        }, console.log(that.state.users))
+        })
       } else if(data.type === 'clear'){
         that.clearCanvas()
       } else if(data.type === 'join'){
@@ -243,8 +241,6 @@ class Room extends Component {
   }
 
   render() {
-    console.log("Host:")
-    console.log(this.state.hostId)
     const disabled = this.state.users.length < 2
 
     return(

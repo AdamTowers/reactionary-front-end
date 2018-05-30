@@ -34,20 +34,14 @@ class CanvasContainer extends Component {
         username: localStorage.username
       }, {
       connected: () => {
-        console.log("connected");
       },
       disconnected: () => {
-        console.log("disconnected");
       },
       received: (data) => {
-        console.log('received: ')
-        console.log(data)
         if(!this.isArtist()){
           if (data.message.action === 'mouseDown') {
             this.beginPath(data.message.x, data.message.y)
-            console.log('begin path')
           } else if (data.message.action === 'mouseUp' || data.message.action === 'mouseOut') {
-            console.log('close path')
             this.closePath()
           } else if (data.message.action === 'mouseMove') {
             this.drawLine(data.message.x, data.message.y)
@@ -64,8 +58,6 @@ class CanvasContainer extends Component {
       this.isDown = true
       const mouseX = e.clientX - this.xOffset
       const mouseY = e.clientY - this.yOffset
-      console.log('begin mouse down: ')
-      console.log(mouseX, mouseY)
 
       this.beginPath(mouseX, mouseY);
 
@@ -77,7 +69,6 @@ class CanvasContainer extends Component {
           y: mouseY
         }
       })
-      console.log('mousedown sent')
     }
   }
 
@@ -87,10 +78,6 @@ class CanvasContainer extends Component {
       e.stopPropagation();
       const mouseX = e.clientX - this.xOffset
       const mouseY = e.clientY - this.yOffset
-      console.log('begin mouse move: x,y: ')
-      console.log(mouseX, mouseY)
-      console.log('offsetx, offsety : ')
-      console.log(this.xOffset, this.yOffset)
       this.drawLine(mouseX, mouseY)
 
       this.sub.send({
@@ -122,7 +109,6 @@ class CanvasContainer extends Component {
   onMouseUp = (e) => {
     if(this.isArtist()){
       e.persist()
-      console.log('mouse up event sent')
       this.closePath()
       this.sub.send({
         to: 'canvas_' + this.props.roomId,
@@ -146,7 +132,6 @@ class CanvasContainer extends Component {
     if(this.isDown){
       this.isDown = false
       this.canvas.getContext('2d').closePath();
-      // debugger
     }
   }
 
