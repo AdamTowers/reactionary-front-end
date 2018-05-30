@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Header, Image, Modal, Form } from 'semantic-ui-react'
+import { Button, Modal, Form } from 'semantic-ui-react'
 
 const CreateRoomModal = (props) => {
   return(

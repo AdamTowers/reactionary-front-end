@@ -4,6 +4,7 @@ import MessageListContainer from '../components/MessageListContainer'
 import CanvasContainer from '../components/CanvasContainer'
 import ActionCable from 'actioncable'
 import { Button} from 'semantic-ui-react'
+
 class Room extends Component {
   constructor(props){
     super(props)
@@ -19,6 +20,8 @@ class Room extends Component {
       aftermath: false
     }
     this.room = this.props.match.params.id
+    this.roomname = ""
+    this.hostname = ""
     this.sub = {}
     this.createSubscription = this.createSubscription.bind(this)
   }
@@ -29,51 +32,54 @@ class Room extends Component {
       that.setState({
         users: res.data
       })
+      console.log(res.data)
     })
     fetch('http://localhost:3001/api/v1/rooms/'+that.room).then(r => r.json()).then(res => {
       that.setState({
-        host_id: res.data.attributes['user-id']
+        host_id: res.data.attributes['user-id'],
       })
-
+      that.roomname = res.data.attributes.name
     })
     const cable = ActionCable.createConsumer('ws://localhost:3001/cable')
     that.createSubscription(that.room, cable)
   }
-
-  // componentWillUnmount = () => {
-  //   console.log('unmounted')
-  //   this.sub['game_'+this.room].send({
-  //     to: 'game_'+this.room,
-  //     type: 'disconnect',
-  //     isReady: true,
-  //     user_id: parseInt(localStorage.user_id)
-  //   })
-  // }
 
   createSubscription = (room, cable) => {
     const that = this
     that.sub['game_'+ that.room] = cable.subscriptions.create({
       channel: 'GamesChannel',
       room: 'game_'+ that.room,
-      user_id: localStorage.user_id
+      user_id: localStorage.user_id,
+      username: localStorage.username
     }, {
     connected: () => {
       console.log(that.sub)
       console.log("connected to game room");
+
+      // { type: "join", userId: params['user_id'],
+      // attributes: {username: user.username}, random:'asdf'}
+      let messages = that.state.messages
+      if(messages){
+        messages.push({username: 'Game Bot', content: localStorage.username+' joined the room.'})
+        that.sub['game_'+that.room].send({
+          to: 'game_'+that.room,
+          type: 'join',
+          user: {
+            userId: localStorage.user_id,
+            attributes:{
+              username: localStorage.username
+            }
+          },
+          messages: messages,
+          users: that.state.users
+        })}
+
     },
     disconnected: () => {
       console.log("disconnected/ logged out");
-      //
-      // this.sub['game_' + this.room].send({
-      //   to: 'game_'+this.room,
-      //   type: 'disconnect',
-      //   user_id: localStorage.user_id,
-      // })
-      // cable.subscriptions.remove(this.sub)
-      // this.perform('unsubscribed')
     },
     received: (data) => {
-      console.log(data)
+
 
       if(data.type === 'message'){
         let messages = that.state.messages
@@ -81,33 +87,43 @@ class Room extends Component {
         that.setState({
           messages: messages
         })
-
-        if(data.content == that.state.word.content){
-          console.log(data.username+' wins! The word is: '+ data.content)
-          alert(data.username+' wins! The word is: '+ data.content)
-          const messages = this.state.messages
-          messages.push({username: 'Admin', content: data.username+' wins! The word is: '+ data.content})
-          this.setState({
+        if(data.content == that.state.word.content && !that.state.aftermath){
+          const messages = that.state.messages
+          messages.push({username: 'Game Bot', content: data.username+' wins! The word is: '+ data.content})
+          that.setState({
             messages: messages,
             aftermath: true
           })
         }
       } else if(data.type ==='start_game'){
         if(localStorage.user_id === data.artistId){
-          console.log('asldjfalsjdf')
-          console.log(data.word.content)
           alert('You\'re the current artist. Your word is: '+ data.word.content)
         }
-
         that.setState({
           isReady: true,
           artistId: data.artistId,
           word: data.word
         })
       } else if(data.type ==='disconnect'){
+        let messages = that.state.messages
+        console.log('disconnect')
+        messages.push({username: 'Game Bot', content: data.username+' left the room.'})
         that.setState({
-          users: that.state.users.filter(u => parseInt(u.id) !== parseInt(data.userId))
-        })
+          users: that.state.users.filter(u => parseInt(u.id) !== parseInt(data.userId)),
+        }, console.log(that.state.users))
+      } else if(data.type === 'clear'){
+        that.clearCanvas()
+      } else if(data.type === 'join'){
+
+        const users = that.state.users
+        if(users && users.find(u => parseInt(u.id) === parseInt(data.user.id))){
+          users.push(data.user)
+          debugger
+          that.setState({
+            users: users,
+            messages:data.messages
+          })
+        }
       }
 
     }})
@@ -129,16 +145,12 @@ class Room extends Component {
     const msg = e.target.querySelector('input').value
     if(localStorage.user_id === this.artistId && msg && msg !== "" && msg.toLowerCase().indexOf(this.state.word.content.toLowerCase()) > -1) {
       const messages = this.state.messages
-      messages.push({username: 'Admin', content: 'You can\'t compete this round'})
+      messages.push({username: 'Game Bot', content: 'You can\'t compete this round'})
       this.setState({
         messages: messages
       })
-      /*
-      var string = "foo",
-          expr = /oo/;
-      string.match(expr);
-      */
-    }else {
+
+    } else {
         this.sub['game_' + this.room].send({
         to: 'game_'+this.room,
         type: 'message',
@@ -150,6 +162,7 @@ class Room extends Component {
     }
     e.target.querySelector('input').value = ""
   }
+
   clickReady = (e) => {
     // if(this.state.users){
     const that = this
@@ -182,24 +195,50 @@ class Room extends Component {
     this.props.history.push('/')
   }
 
+  onClearCanvas = () => {
+    this.sub['game_'+this.room].send({
+      to: 'game_'+this.room,
+      type: 'clear',
+    })
+  }
+
+  isLoaded = () => {
+    return this.state.isUserListLoaded && this.state.isMessageListLoaded
+  }
+
+  isHost = () => {
+    return parseInt(this.state.host_id) === parseInt(localStorage.user_id)
+  }
+
+  isPartOfRoom= () => {
+    if(this.state.users)
+      return this.state.users.indexOf(localStorage.user_id)
+    else {
+      return []
+    }
+  }
+
   clearCanvas = () => {
-    // const context = this.canvas
     const canvas = document.getElementById('canvas')
     const context = canvas.getContext('2d')
     context.clearRect(0, 0, canvas.width, canvas.height);
-    
+  }
+
+  isGameStarted = () => {
+    return this.state.isReady && this.state.artistId!= ""
   }
 
   render() {
-    return(
 
+    return(
       <div id="room">
+        <h1>{this.roomname}</h1>
         <div id="top">
-          { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
-          { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <Button onClick={this.clearCanvas}>Clear</Button>: "" }
-          <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages}/>
+          { this.isLoaded() ? <CanvasContainer artistId={this.artistId} roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
+          { this.isLoaded() && this.isHost() && this.isPartOfRoom() && this.isGameStarted() ? <Button onClick={this.onClearCanvas}>Clear</Button>: "" }
+          <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages ? this.state.messages : []}/>
         </div>
-        <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
+        <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users ? this.state.users : []}/>
 
        <Button onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
       </div>

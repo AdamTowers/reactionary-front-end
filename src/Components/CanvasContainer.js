@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Canvas from './Canvas'
 import ActionCable from 'actioncable'
-import { Button} from 'semantic-ui-react'
+// import { Button} from 'semantic-ui-react'
 
 class CanvasContainer extends Component {
   constructor(props) {
@@ -56,26 +56,28 @@ class CanvasContainer extends Component {
 
 
   onMouseDown = (e) => {
+    if(this.isArtist()){
     e.persist()
-    this.isDown = true
-    const mouseX = e.clientX - this.xOffset
-    const mouseY = e.clientY - this.yOffset
+      this.isDown = true
+      const mouseX = e.clientX - this.xOffset
+      const mouseY = e.clientY - this.yOffset
 
-    this.beginPath(mouseX, mouseY);
+      this.beginPath(mouseX, mouseY);
 
-    this.sub.send({
-      to: 'canvas_' + this.props.roomId,
-      message: {
-        action: 'mouseDown',
-        x: mouseX,
-        y: mouseY
-      }
-    })
-    console.log('mousedown sent')
+      this.sub.send({
+        to: 'canvas_' + this.props.roomId,
+        message: {
+          action: 'mouseDown',
+          x: mouseX,
+          y: mouseY
+        }
+      })
+      console.log('mousedown sent')
+    }
   }
 
   onMouseMove = (e) => {
-    if (this.isDown) {
+    if (this.isDown && this.isArtist()) {
       e.preventDefault();
       e.stopPropagation();
       const mouseX = e.clientX - this.xOffset
@@ -94,30 +96,34 @@ class CanvasContainer extends Component {
   }
 
   onMouseOut = (e) => {
-    e.persist()
-    this.closePath()
-    this.sub.send({
-      to: 'canvas_' + this.props.roomId,
-      message: {
-        action: 'mouseUp',
-        x: e.clientX,
-        y: e.clientY
-      },
-    })
+    if(this.isArtist()){
+      e.persist()
+      this.closePath()
+      this.sub.send({
+        to: 'canvas_' + this.props.roomId,
+        message: {
+          action: 'mouseUp',
+          x: e.clientX,
+          y: e.clientY
+        },
+      })
+    }
   }
 
   onMouseUp = (e) => {
-    e.persist()
-    console.log('mouse up event sent')
-    this.closePath()
-    this.sub.send({
-      to: 'canvas_' + this.props.roomId,
-      message: {
-        action: 'mouseUp',
-        x: e.clientX,
-        y: e.clientY
-      },
-    })
+    if(this.isArtist()){
+      e.persist()
+      console.log('mouse up event sent')
+      this.closePath()
+      this.sub.send({
+        to: 'canvas_' + this.props.roomId,
+        message: {
+          action: 'mouseUp',
+          x: e.clientX,
+          y: e.clientY
+        },
+      })
+    }
   }
 
   beginPath = (x,y) => {
@@ -161,11 +167,13 @@ class CanvasContainer extends Component {
     }
   }
 
+  isArtist = () => {
+    return parseInt(localStorage.user_id) === parseInt(this.props.artistId)
+  }
 
   render() {
     return (
       <div className = "canvas-container" >
-
         <Canvas onMouseOut = {
           this.onMouseOut
         }
