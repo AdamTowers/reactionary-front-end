@@ -217,23 +217,24 @@ class Room extends Component {
     const canvas = document.getElementById('canvas')
     const context = canvas.getContext('2d')
     context.clearRect(0, 0, canvas.width, canvas.height);
-}
+  }
 
   isGameStarted = () => {
     return this.state.isReady && this.state.artistId!= ""
   }
 
   deleteRoom = () => {
+    debugger
     this.sub['game_'+this.room].send({
       to: 'game_'+this.room,
       type: 'delete_game',
       user_id: localStorage.user_id,
     })
-    this.sub['game_'+this.room].send({
-      to: 'rooms_'+this.room,
-      type: 'delete_game',
-      user_id: localStorage.user_id,
-    })
+    // this.sub['game_'+this.room].send({
+    //   to: 'rooms_'+this.room,
+    //   type: 'delete_game',
+    //   user_id: localStorage.user_id,
+    // })
     this.props.history.push('/')
   }
 
@@ -254,8 +255,8 @@ class Room extends Component {
 
               { this.isLoaded() ? <CanvasContainer artistId={this.state.artistId} roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
               { this.isLoaded() && this.isHost() && this.isPartOfRoom() && this.isGameStarted()  ? <Button primary size="small" onClick={this.clearCanvas} >Clear</Button> : "" }
-              {parseInt(localStorage.user_id, 10) === parseInt(this.state.host_id, 10) ? <Button secondary size="small" disabled={disabled} onClick={this.clickReady}>Start game</Button> : ""}
-              {parseInt(localStorage.user_id, 10) === parseInt(this.state.host_id, 10) ? <Button secondary size="small" onClick={this.props.deleteRoom}>Delete room</Button> : ""}
+              { parseInt(localStorage.user_id, 10) === parseInt(this.state.host_id, 10) ? <Button secondary size="small" disabled={disabled} onClick={this.clickReady}>Start game</Button> : "" }
+              { parseInt(localStorage.user_id, 10) === parseInt(this.state.host_id, 10) ? <Button secondary size="small" onClick={this.deleteRoom}>Delete room</Button> : "" }
               <Button default size="small" onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
 
               <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>

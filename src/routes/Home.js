@@ -20,11 +20,8 @@ class Home extends Component {
     console.log('componentdidmount')
     this.setup()
   }
-  componentWillMount(){
-    console.log('componentwillmount')
-  }
 
-  setup = ()=> {
+  setup = () => {
     const that = this
     const cable = ActionCable.createConsumer('ws://localhost:3001/cable')
     fetch('http://localhost:3001/api/v1/rooms').then(r => r.json())
@@ -51,9 +48,6 @@ class Home extends Component {
     disconnected: () => {
       console.log("disconnected/ logged out");
       console.log('unsub')
-      debugger
-      that.sub.unsubscribe()
-      delete that.sub
     },
     received: (data) => {
       if(data.type === 'create'){
@@ -73,12 +67,12 @@ class Home extends Component {
         debugger
         if(that.sub['rooms_'+roomid]){
           that.sub['rooms_'+roomid].unsubscribe()
+
           delete that.sub['rooms_'+roomid]
           that.setState({
             rooms: that.state.rooms.filter(r => parseInt(r.id) !== parseInt(roomid))
           })
         }
-
       }
     }})
   }
@@ -92,6 +86,13 @@ class Home extends Component {
         user_id: localStorage.user_id
       },
     })
+
+    //TODO: UNSUBSCRIBE
+    this.sub['rooms_'+room_id].unsubscribe()
+    delete this.sub['rooms_'+room_id]
+
+    // this.sub.unsubscribe()
+    // delete this.sub
     this.props.history.push('/room/'+room_id)
   }
 
@@ -128,9 +129,7 @@ class Home extends Component {
   }
 
   render(){
-
     return(
-
       <Container>
         <Image src={logo} centered={true} />
         <Segment.Group>
