@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import { Container, Segment } from 'semantic-ui-react'
 
 class Login extends Component {
   constructor(props){
@@ -27,23 +28,34 @@ class Login extends Component {
 
   render() {
     return (
-      <div id="login">
-      <h1>Login</h1>
-        <form onSubmit={this.onSubmit.bind(this)} className="ui form">
-          <div className="field">
-            <label>Username</label>
-            <input type="text" name="username" onChange={this.handleChange} value={this.state.username} />
-          </div>
+      <Container text>
+        <Segment.Group>
+          <Segment>
+            <h1>Login</h1>
+              <form onSubmit={this.onSubmit.bind(this)} className="ui form">
+                <div className="field">
+                  <label>Username</label>
+                  <input type="text" name="username" onChange={this.handleChange} value={this.state.username} />
+                </div>
 
-          <div className="field">
-            <label>Password</label>
-            <input type="password" name="password" onChange={this.handleChange} value={this.state.password}/>
-          </div>
+                <div className="field">
+                  <label>Password</label>
+                  <input type="password" name="password" onChange={this.handleChange} value={this.state.password}/>
+                </div>
 
-          <button className="ui button" type="submit">Submit</button>
-        </form>
-        <button className="ui button" tabIndex="0" type="button" onClick={this.onRegister}>Register</button>
-      </div>
+                <button className="ui button" type="submit">Submit</button>
+
+                <button
+                  className="ui button"
+                  tabIndex="0"
+                  type="button"
+                  onClick={this.onRegister}>
+                    Register
+                </button>
+              </form>
+          </Segment>
+        </Segment.Group>
+      </Container>
     )
   }
 }
