@@ -17,7 +17,6 @@ class Home extends Component {
   }
 
   componentDidMount = () => {
-    console.log('componentdidmount')
     this.setup()
   }
 
@@ -43,11 +42,8 @@ class Home extends Component {
       room: 'rooms_'+room.id
     }, {
     connected: () => {
-      console.log("connected to main page/ logged in?");
     },
     disconnected: () => {
-      console.log("disconnected/ logged out");
-      console.log('unsub')
     },
     received: (data) => {
       if(data.type === 'create'){
@@ -61,7 +57,6 @@ class Home extends Component {
         that.setState({
           rooms: that.state.rooms.map(r=> r.id === data.id ? data : r)
         })
-        console.log(that.state.rooms)
       }else if(data.type === 'delete_game'){
         const roomid = data.to.split("_")[1]
         if(that.sub['rooms_'+roomid]){

@@ -7,15 +7,12 @@ class UserListContainer extends Component {
   }
 
   clickReady = (e) => {
-    console.log(e.target)
     this.props.clickReady(e.target)
   }
 
   render() {
 
     const users = this.props.users.map(u => <UserListItem key={u.id} user={u.attributes} /> )
-    console.log('USERS:')
-    console.log(this.props.users)
     return(
       <div>
         <h1>Players</h1>

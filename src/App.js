@@ -25,7 +25,6 @@ class App extends Component {
       });
   }
   register = (username, password, callback) => {
-    console.log(JSON.stringify({ username, password }))
     fetch('http://localhost:3001/api/v1/users/', {
       method: 'POST',
       headers: {
