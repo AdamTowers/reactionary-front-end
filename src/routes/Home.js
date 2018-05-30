@@ -64,7 +64,6 @@ class Home extends Component {
         console.log(that.state.rooms)
       }else if(data.type === 'delete_game'){
         const roomid = data.to.split("_")[1]
-        debugger
         if(that.sub['rooms_'+roomid]){
           that.sub['rooms_'+roomid].unsubscribe()
 

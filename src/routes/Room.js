@@ -93,7 +93,7 @@ class Room extends Component {
             })
           }
 
-        
+
       } else if(data.type ==='start_game'){
         if(localStorage.user_id === data.artistId){
           alert('You\'re the current artist. Your word is: '+ data.word.content)
@@ -228,7 +228,7 @@ class Room extends Component {
   }
 
   deleteRoom = () => {
-    debugger
+    
     this.sub['game_'+this.room].send({
       to: 'game_'+this.room,
       type: 'delete_game',
