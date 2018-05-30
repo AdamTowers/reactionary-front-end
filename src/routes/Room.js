@@ -6,8 +6,6 @@ import ActionCable from 'actioncable'
 import { Grid, Segment, Button, Image } from 'semantic-ui-react'
 import logo from '../images/reactionary_logo.png'
 
-
-
 class Room extends Component {
   constructor(props){
     super(props)
@@ -56,11 +54,7 @@ class Room extends Component {
       username: localStorage.username
     }, {
     connected: () => {
-      console.log(that.sub)
-      console.log("connected to game room");
 
-      // { type: "join", userId: params['user_id'],
-      // attributes: {username: user.username}, random:'asdf'}
       let messages = that.state.messages
       if(messages){
         messages.push({username: 'Game Bot', content: localStorage.username+' joined the room.'})
@@ -169,7 +163,6 @@ class Room extends Component {
   }
 
   clickReady = (e) => {
-    // if(this.state.users){
     const that = this
       fetch('http://localhost:3001/api/v1/random-word').then(res => res.json()).then(r => {
         const randomUser = that.state.users[Math.floor(Math.random()*that.state.users.length)].id
@@ -187,11 +180,6 @@ class Room extends Component {
           word: r
         })
       })
-
-      //grab user to be the artist
-      //give user the word
-      //start a timer for everyone
-    // }
   }
 
   leaveRoom = () => {
@@ -213,6 +201,9 @@ class Room extends Component {
 
   isHost = () => {
     return parseInt(this.state.host_id) === parseInt(localStorage.user_id)
+  }
+  isArtist = () => {
+    return parseInt(this.state.artistId) === parseInt(localStorage.user_id)
   }
 
   isPartOfRoom= () => {
@@ -261,11 +252,13 @@ class Room extends Component {
         <Grid columns={2} stackable>
           <Grid.Column>
             <Segment>
-              { this.isLoaded() ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
+
+              { this.isLoaded() ? <CanvasContainer artistId={this.state.artistId} roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
               { this.isLoaded() && this.isHost() && this.isPartOfRoom() && this.isGameStarted()  ? <Button primary size="small" onClick={this.clearCanvas} >Clear</Button> : "" }
               {parseInt(localStorage.user_id, 10) === parseInt(this.state.host_id, 10) ? <Button secondary size="small" disabled={disabled} onClick={this.clickReady}>Start game</Button> : ""}
               {parseInt(localStorage.user_id, 10) === parseInt(this.state.host_id, 10) ? <Button secondary size="small" onClick={this.props.deleteRoom}>Delete room</Button> : ""}
               <Button default size="small" onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
+
               <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
             </Segment>
           </Grid.Column>

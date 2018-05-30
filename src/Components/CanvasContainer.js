@@ -40,15 +40,18 @@ class CanvasContainer extends Component {
         console.log("disconnected");
       },
       received: (data) => {
-        console.log('received: '+data.message.action)
-        if (data.message.action === 'mouseDown') {
-          this.beginPath(data.message.x, data.message.y)
-          console.log('begin path')
-        } else if (data.message.action === 'mouseUp' || data.message.action === 'mouseOut') {
-          console.log('close path')
-          this.closePath()
-        } else if (data.message.action === 'mouseMove') {
-          this.drawLine(data.message.x - this.xOffset, data.message.y - this.yOffset)
+        console.log('received: ')
+        console.log(data)
+        if(!this.isArtist()){
+          if (data.message.action === 'mouseDown') {
+            this.beginPath(data.message.x, data.message.y)
+            console.log('begin path')
+          } else if (data.message.action === 'mouseUp' || data.message.action === 'mouseOut') {
+            console.log('close path')
+            this.closePath()
+          } else if (data.message.action === 'mouseMove') {
+            this.drawLine(data.message.x, data.message.y)
+          }
         }
       }
     })
@@ -57,10 +60,12 @@ class CanvasContainer extends Component {
 
   onMouseDown = (e) => {
     if(this.isArtist()){
-    e.persist()
+      e.persist()
       this.isDown = true
       const mouseX = e.clientX - this.xOffset
       const mouseY = e.clientY - this.yOffset
+      console.log('begin mouse down: ')
+      console.log(mouseX, mouseY)
 
       this.beginPath(mouseX, mouseY);
 
@@ -82,6 +87,10 @@ class CanvasContainer extends Component {
       e.stopPropagation();
       const mouseX = e.clientX - this.xOffset
       const mouseY = e.clientY - this.yOffset
+      console.log('begin mouse move: x,y: ')
+      console.log(mouseX, mouseY)
+      console.log('offsetx, offsety : ')
+      console.log(this.xOffset, this.yOffset)
       this.drawLine(mouseX, mouseY)
 
       this.sub.send({
@@ -144,8 +153,10 @@ class CanvasContainer extends Component {
   drawLine = (x, y) => {
     const ctx = this.canvas.getContext('2d')
     const coord = this.state.coordinates
+
     ctx.moveTo(coord[0], coord[1])
     ctx.lineTo(x, y)
+    ctx.closePath()
     ctx.stroke()
     this.setState({
       coordinates: [x, y]

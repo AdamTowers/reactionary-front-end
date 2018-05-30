@@ -10,9 +10,6 @@ class UserListContainer extends Component {
     console.log(e.target)
     this.props.clickReady(e.target)
   }
-  componentDidUpdate(){
-
-  }
 
   render() {
 

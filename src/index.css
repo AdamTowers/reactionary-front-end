@@ -55,3 +55,12 @@ display:block;
   border: 1px solid black;
 
 }
+
+.visible.transition {
+  margin-top: 0 auto !important;
+  display: inline-block !important;
+  position: relative;
+  top: 50%;
+  width: 100%;
+
+}
