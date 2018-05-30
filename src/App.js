@@ -56,7 +56,7 @@ class App extends Component {
 
  render = () => {
    return (
-     <div>
+     <div className="app-container">
       <Router>
        <div>
          <Route exact path="/" component={Home} joinRoom={this.joinRoom} {...this.props} />
@@ -65,7 +65,6 @@ class App extends Component {
          <Route path="/room/:id" render={(props) => <Room {...props} />} />
        </div>
      </Router>
-
     </div>
    )
  }

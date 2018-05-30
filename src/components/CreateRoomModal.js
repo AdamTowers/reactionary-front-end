@@ -3,7 +3,7 @@ import { Button, Header, Image, Modal, Form } from 'semantic-ui-react'
 
 const CreateRoomModal = (props) => {
   return(
-    <Modal trigger={<Button>Create a Room</Button>}>
+    <Modal trigger={<Button primary>Create a Room</Button>}>
       <Modal.Header>Create a Room</Modal.Header>
       <Modal.Content image>
         <Modal.Description>

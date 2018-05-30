@@ -114,8 +114,7 @@ class Home extends Component {
         <Segment.Group>
           <Segment>
             <CreateRoomModal onChange={this.onChange} onSubmit={this.createRoom}/>
-          </Segment>
-          <Segment>
+            <h1>Available Rooms</h1>
             <RoomListContainer rooms={this.state.rooms} joinRoom={this.joinRoom.bind(this)} />
           </Segment>
         </Segment.Group>
