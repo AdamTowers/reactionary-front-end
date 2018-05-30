@@ -54,11 +54,6 @@ class Room extends Component {
       username: localStorage.username
     }, {
     connected: () => {
-      console.log(that.sub)
-      console.log("connected to game room");
-
-      // { type: "join", userId: params['user_id'],
-      // attributes: {username: user.username}, random:'asdf'}
       let messages = that.state.messages
       if(messages){
         messages.push({username: 'Game Bot', content: localStorage.username+' joined the room.'})
