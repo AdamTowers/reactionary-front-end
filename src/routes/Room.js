@@ -248,6 +248,10 @@ class Room extends Component {
   }
 
   render() {
+    console.log("Host:")
+    console.log(this.state.hostId)
+    const disabled = this.state.users.length < 2
+
     return(
       <div>
         <Grid columns={1} stackable>
@@ -258,13 +262,15 @@ class Room extends Component {
           <Grid.Column>
             <Segment>
               { this.isLoaded() ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
-              { this.isLoaded() && this.isHost() && this.isPartOfRoom() && this.isGameStarted()  ? <Button secondary size='tiny' onClick={this.clearCanvas} >Clear</Button> : "" }
+              { this.isLoaded() && this.isHost() && this.isPartOfRoom() && this.isGameStarted()  ? <Button primary size="small" onClick={this.clearCanvas} >Clear</Button> : "" }
+              {parseInt(localStorage.user_id, 10) === parseInt(this.state.host_id, 10) ? <Button secondary size="small" disabled={disabled} onClick={this.clickReady}>Start game</Button> : ""}
+              {parseInt(localStorage.user_id, 10) === parseInt(this.state.host_id, 10) ? <Button secondary size="small" onClick={this.props.deleteRoom}>Delete room</Button> : ""}
+              <Button default size="small" onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
               <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
-              <Button secondary size='tiny' onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
             </Segment>
           </Grid.Column>
           <Grid.Column>
-            <MessageListContainer setMessageLoaded={this.setMessageLoaded} sendMessage={this.sendMessage.bind(this)} messages={this.state.messages ? this.state.messages : []} deleteRoom={this.deleteRoom} clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users ? this.state.users : []} />
+            <MessageListContainer setMessageLoaded={this.setMessageLoaded} sendMessage={this.sendMessage.bind(this)} messages={this.state.messages ? this.state.messages : []} deleteRoom={this.deleteRoom} clickReady={this.clickReady} setUserLoaded={this.setUserLoaded}  users={this.state.users ? this.state.users : []} />
          </Grid.Column>
        </Grid>
 
