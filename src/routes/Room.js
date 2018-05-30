@@ -3,7 +3,7 @@ import UserListContainer from '../components/UserListContainer'
 import MessageListContainer from '../components/MessageListContainer'
 import CanvasContainer from '../components/CanvasContainer'
 import ActionCable from 'actioncable'
-import { Button} from 'semantic-ui-react'
+import { Container, Segment, Button } from 'semantic-ui-react'
 class Room extends Component {
   constructor(props){
     super(props)
@@ -192,6 +192,23 @@ class Room extends Component {
 
   render() {
     return(
+      <Container>
+        <Segment.Group>
+          <Segment>
+            { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
+            { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <Button onClick={this.clearCanvas}>Clear</Button>: "" }
+            <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages}/>
+          </Segment>
+
+          <Segment>
+            <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
+          </Segment>
+          <Segment>
+            <Button onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
+          </Segment>
+       </Segment.Group>
+      </Container>
+      {/*
       <div id="room">
         <div id="top">
           { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
@@ -201,7 +218,7 @@ class Room extends Component {
         <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
 
        <Button onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
-      </div>
+      </div> */}
     )
   }
 
