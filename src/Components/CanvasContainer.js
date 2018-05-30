@@ -164,7 +164,7 @@ class CanvasContainer extends Component {
   }
 
   isArtist = () => {
-    return parseInt(localStorage.user_id) === parseInt(this.props.artistId)
+    return parseInt(localStorage.user_id, 10) === parseInt(this.props.artistId, 10)
   }
 
   render() {

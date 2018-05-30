@@ -1,14 +1,8 @@
 import React, {Component} from 'react'
 import RoomListItem from './RoomListItem'
-import 'semantic-ui-css/semantic.min.css';
-import ActionCable from 'actioncable'
-
+import 'semantic-ui-css/semantic.min.css'
 
 class RoomListContainer extends Component {
-
-  constructor(props){
-    super(props)
-  }
 
   componentDidMount() {
   }

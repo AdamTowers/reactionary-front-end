@@ -64,7 +64,7 @@ class Home extends Component {
 
           delete that.sub['rooms_'+roomid]
           that.setState({
-            rooms: that.state.rooms.filter(r => parseInt(r.id) !== parseInt(roomid))
+            rooms: that.state.rooms.filter(r => parseInt(r.id, 10) !== parseInt(roomid, 10))
           })
         }
       }
@@ -97,7 +97,7 @@ class Home extends Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({name: that.state.newRoom, user_id: parseInt(localStorage.user_id)})
+      body: JSON.stringify({name: that.state.newRoom, user_id: parseInt(localStorage.user_id, 10)})
     })
     .then(resp => resp.json())
     .then(r => {
