@@ -55,3 +55,10 @@ display:block;
   border: 1px solid black;
 
 }
+
+.visible.transition {
+  margin-top: auto !important;
+  display: inline-block !important;
+  position: relative;
+  top: 20%;
+}

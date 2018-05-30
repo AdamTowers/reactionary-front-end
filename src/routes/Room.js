@@ -6,8 +6,6 @@ import ActionCable from 'actioncable'
 import { Grid, Segment, Button, Image } from 'semantic-ui-react'
 import logo from '../images/reactionary_logo.png'
 
-
-
 class Room extends Component {
   constructor(props){
     super(props)
@@ -214,6 +212,9 @@ class Room extends Component {
   isHost = () => {
     return parseInt(this.state.host_id) === parseInt(localStorage.user_id)
   }
+  isArtist = () => {
+    return parseInt(this.state.artistId) === parseInt(localStorage.user_id)
+  }
 
   isPartOfRoom= () => {
     if(this.state.users)
@@ -257,8 +258,8 @@ class Room extends Component {
         <Grid columns={2} stackable>
           <Grid.Column>
             <Segment>
-              { this.isLoaded() ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
-              { this.isLoaded() && this.isHost() && this.isPartOfRoom() && this.isGameStarted()  ? <Button secondary size='tiny' onClick={this.clearCanvas} >Clear</Button> : "" }
+              { this.isLoaded() ? <CanvasContainer artistId={this.state.artistId} roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
+              { this.isLoaded() && this.isArtist() && this.isPartOfRoom() && this.isGameStarted()  ? <Button secondary size='tiny' onClick={this.onClearCanvas} >Clear</Button> : "" }
               <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
               <Button secondary size='tiny' onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
             </Segment>

@@ -10,9 +10,6 @@ class UserListContainer extends Component {
     console.log(e.target)
     this.props.clickReady(e.target)
   }
-  componentDidUpdate(){
-
-  }
 
   render() {
 
@@ -24,8 +21,6 @@ class UserListContainer extends Component {
       <div>
         <h1>Players</h1>
         {users}
-
-
         {parseInt(localStorage.user_id, 10) === parseInt(this.props.hostId, 10) ? <Button disabled={disabled} onClick={this.clickReady}>Start game</Button> : ""}
         {parseInt(localStorage.user_id, 10) === parseInt(this.props.hostId, 10) ? <Button onClick={this.props.deleteRoom}>Delete room</Button> : ""}
 
