@@ -28,20 +28,26 @@ class Room extends Component {
   }
 
   componentDidMount() {
-    const that = this
-    fetch('http://localhost:3001/api/v1/user_room/'+that.room).then(r => r.json()).then(res => {
-      that.setState({
-        users: res.data
+    if (localStorage.getItem('token')) {
+      const that = this
+      fetch('http://localhost:3001/api/v1/user_room/'+that.room).then(r => r.json()).then(res => {
+        that.setState({
+          users: res.data
+        })
+        console.log(res.data)
       })
-    })
-    fetch('http://localhost:3001/api/v1/rooms/'+that.room).then(r => r.json()).then(res => {
-      that.setState({
-        host_id: res.data.attributes['user-id'],
+      fetch('http://localhost:3001/api/v1/rooms/'+that.room).then(r => r.json()).then(res => {
+        that.setState({
+          host_id: res.data.attributes['user-id'],
+        })
+        that.roomname = res.data.attributes.name
       })
-      that.roomname = res.data.attributes.name
-    })
-    const cable = ActionCable.createConsumer('ws://localhost:3001/cable')
-    that.createSubscription(that.room, cable)
+      const cable = ActionCable.createConsumer('ws://localhost:3001/cable')
+      that.createSubscription(that.room, cable)
+    } else {
+      this.props.history.push("/login")
+    }
+
   }
 
   createSubscription = (room, cable) => {

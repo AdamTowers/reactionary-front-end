@@ -18,10 +18,14 @@ class App extends Component {
       body: JSON.stringify({ username: username, password_digest: password })
     }).then(res => res.json())
       .then(json => {
-        localStorage.setItem('token', json.token);
-        localStorage.setItem('user_id', json.user_id);
-        localStorage.setItem('username', json.username);
-        callback("/");
+        if (json.token) {
+          localStorage.setItem('token', json.token);
+          localStorage.setItem('user_id', json.user_id);
+          localStorage.setItem('username', json.username);
+          callback("/");
+        } else {
+          alert("Wrong username/password combination.")
+        }
       });
   }
   register = (username, password, callback) => {
@@ -34,10 +38,15 @@ class App extends Component {
       body: JSON.stringify({ username, password })
     }).then(r => r.json())
       .then(json => {
-        localStorage.setItem('token', json.token);
-        localStorage.setItem('user_id', json.user_id);
-        localStorage.setItem('username', json.username);
-        callback("/");
+        if (json.token) {
+          localStorage.setItem('token', json.token);
+          localStorage.setItem('user_id', json.user_id);
+          localStorage.setItem('username', json.username);
+          callback("/");
+        } else {
+          json.forEach(error => alert(error))
+        }
+
       });
   }
 

@@ -21,18 +21,22 @@ class Home extends Component {
   }
 
   setup = () => {
-    const that = this
-    const cable = ActionCable.createConsumer('ws://localhost:3001/cable')
-    fetch('http://localhost:3001/api/v1/rooms').then(r => r.json())
-    .then(data => {
-      that.setState({
-        rooms: data.data
+    if (localStorage.getItem('token')) {
+      const that = this
+      const cable = ActionCable.createConsumer('ws://localhost:3001/cable')
+      fetch('http://localhost:3001/api/v1/rooms').then(r => r.json())
+      .then(data => {
+        that.setState({
+          rooms: data.data
+        })
+        for(let i = 0; i < data.data.length; i++) {
+          this.createSubscription(data.data[i], cable)
+        }
       })
-      for(let i = 0; i < data.data.length; i++) {
-        this.createSubscription(data.data[i], cable)
-      }
-    })
-    this.createSubscription({id: 0}, cable)
+      this.createSubscription({id: 0}, cable)
+    } else {
+      this.props.history.push("/login")
+    }
   }
 
   createSubscription = (room, cable) => {
