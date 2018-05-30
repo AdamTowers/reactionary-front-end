@@ -1,12 +1,15 @@
 import React, {Component} from 'react'
 import RoomListItem from './RoomListItem'
-import 'semantic-ui-css/semantic.min.css';
-import ActionCable from 'actioncable'
-
+import 'semantic-ui-css/semantic.min.css'
 
 class RoomListContainer extends Component {
+<<<<<<< HEAD
   constructor(props){
     super(props)
+=======
+
+  componentDidMount() {
+>>>>>>> 00b2e6e46895d042e12b544516112893c08961bc
   }
 
   joinRoom = (e) => {

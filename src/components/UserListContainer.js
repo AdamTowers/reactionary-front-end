@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import UserListItem from './UserListItem'
-import { Button } from 'semantic-ui-react'
+
 class UserListContainer extends Component {
   componentDidMount(){
     this.props.setUserLoaded()
