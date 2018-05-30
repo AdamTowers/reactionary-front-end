@@ -17,7 +17,11 @@ class Home extends Component {
   }
 
   componentDidMount = () => {
+    console.log('componentdidmount')
     this.setup()
+  }
+  componentWillMount(){
+    console.log('componentwillmount')
   }
 
   setup = ()=> {
@@ -46,6 +50,10 @@ class Home extends Component {
     },
     disconnected: () => {
       console.log("disconnected/ logged out");
+      console.log('unsub')
+      debugger
+      that.sub.unsubscribe()
+      delete that.sub
     },
     received: (data) => {
       if(data.type === 'create'){
@@ -60,6 +68,17 @@ class Home extends Component {
           rooms: that.state.rooms.map(r=> r.id === data.id ? data : r)
         })
         console.log(that.state.rooms)
+      }else if(data.type === 'delete_game'){
+        const roomid = data.to.split("_")[1]
+        debugger
+        if(that.sub['rooms_'+roomid]){
+          that.sub['rooms_'+roomid].unsubscribe()
+          delete that.sub['rooms_'+roomid]
+          that.setState({
+            rooms: that.state.rooms.filter(r => parseInt(r.id) !== parseInt(roomid))
+          })
+        }
+
       }
     }})
   }
@@ -111,6 +130,7 @@ class Home extends Component {
   render(){
 
     return(
+
       <Container>
         <Image src={logo} centered={true} />
         <Segment.Group>
@@ -121,6 +141,7 @@ class Home extends Component {
           </Segment>
         </Segment.Group>
       </Container>
+
     )
   }
 }

@@ -12,7 +12,6 @@ class MessageListContainer extends Component {
   }
   componentDidMount(){
     this.props.setMessageLoaded()
-
   }
 
   render() {

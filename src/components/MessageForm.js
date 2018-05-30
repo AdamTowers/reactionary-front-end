@@ -1,4 +1,4 @@
-import { Button, Form, Input } from 'semantic-ui-react'
+import { Form, Input } from 'semantic-ui-react'
 import React from 'react'
 
 const MessageForm = (props) => {

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import CanvasContainer from './components/CanvasContainer'
+
 import './App.css'
 import Home from './routes/Home'
 import Login from './routes/Login'
 import Register from './routes/Register'
 import Room from './routes/Room'
-import { BrowserRouter as Router, Route, NavLink, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 class App extends Component {
   login = (username, password, callback) => {
