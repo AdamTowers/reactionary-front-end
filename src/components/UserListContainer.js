@@ -2,10 +2,6 @@ import React, {Component} from 'react'
 import UserListItem from './UserListItem'
 import { Button } from 'semantic-ui-react'
 class UserListContainer extends Component {
-  constructor(props){
-    super(props)
-  }
-
   componentDidMount(){
     this.props.setUserLoaded()
   }
@@ -26,8 +22,8 @@ class UserListContainer extends Component {
     return(
       <div id="user-container" className="ui celled list">
         {users}
-        {parseInt(localStorage.user_id) === parseInt(this.props.hostId) ? <Button disabled={disabled} onClick={this.clickReady}>Start game</Button> : ""}
-        {parseInt(localStorage.user_id) === parseInt(this.props.hostId) ? <Button onClick={this.props.deleteRoom}>Delete room</Button> : ""}
+        {parseInt(localStorage.user_id, 10) === parseInt(this.props.hostId, 10) ? <Button disabled={disabled} onClick={this.clickReady}>Start game</Button> : ""}
+        {parseInt(localStorage.user_id, 10) === parseInt(this.props.hostId, 10) ? <Button onClick={this.props.deleteRoom}>Delete room</Button> : ""}
 
       </div>
     )

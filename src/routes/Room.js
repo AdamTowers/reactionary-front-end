@@ -126,8 +126,6 @@ class Room extends Component {
           })
         }
       }else if(data.type === 'delete_game'){
-        debugger
-        // TODO: show a popup
         this.props.history.push('/')
       }
 
@@ -236,6 +234,11 @@ class Room extends Component {
   deleteRoom = () => {
     this.sub['game_'+this.room].send({
       to: 'game_'+this.room,
+      type: 'delete_game',
+      user_id: localStorage.user_id,
+    })
+    this.sub['game_'+this.room].send({
+      to: 'rooms_'+this.room,
       type: 'delete_game',
       user_id: localStorage.user_id,
     })
