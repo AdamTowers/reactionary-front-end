@@ -1,3 +1,10 @@
+.visible.transition {
+  margin-top: auto !important;
+  display: inline-block !important;
+  position: relative;
+  top: 20%;
+}
+
 .app-container {
   padding: 25px;
 }

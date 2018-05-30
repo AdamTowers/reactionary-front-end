@@ -24,7 +24,7 @@ class MessageListContainer extends Component {
           <MessageForm sendMessage={this.props.sendMessage}/>
         </Segment>
         <Segment>
-          {messages}
+          {messages.reverse()}
         </Segment>
       </Segment.Group>
     )

@@ -26,8 +26,8 @@ class UserListContainer extends Component {
         {users}
 
 
-        {parseInt(localStorage.user_id, 10) === parseInt(this.props.hostId, 10) ? <Button disabled={disabled} onClick={this.clickReady}>Start game</Button> : ""}
-        {parseInt(localStorage.user_id, 10) === parseInt(this.props.hostId, 10) ? <Button onClick={this.props.deleteRoom}>Delete room</Button> : ""}
+        {parseInt(localStorage.user_id, 10) === parseInt(this.props.hostId, 10) ? <Button primary disabled={disabled} onClick={this.clickReady}>Start game</Button> : ""}
+        {parseInt(localStorage.user_id, 10) === parseInt(this.props.hostId, 10) ? <Button color="secondary" onClick={this.props.deleteRoom}>Delete room</Button> : ""}
 
       </div>
     )
