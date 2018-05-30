@@ -5,6 +5,7 @@ import CanvasContainer from '../components/CanvasContainer'
 import ActionCable from 'actioncable'
 import { Button} from 'semantic-ui-react'
 
+
 class Room extends Component {
   constructor(props){
     super(props)
@@ -65,7 +66,7 @@ class Room extends Component {
           to: 'game_'+that.room,
           type: 'join',
           user: {
-            userId: localStorage.user_id,
+            id: localStorage.user_id,
             attributes:{
               username: localStorage.username
             }
@@ -79,7 +80,6 @@ class Room extends Component {
       console.log("disconnected/ logged out");
     },
     received: (data) => {
-
 
       if(data.type === 'message'){
         let messages = that.state.messages
@@ -116,14 +116,19 @@ class Room extends Component {
       } else if(data.type === 'join'){
 
         const users = that.state.users
-        if(users && users.find(u => parseInt(u.id) === parseInt(data.user.id))){
+        if(users){
           users.push(data.user)
-          debugger
+          const uniques = users.filter((v,i,a) => a.indexOf(v) == i)
+
           that.setState({
-            users: users,
+            users: uniques,
             messages:data.messages
           })
         }
+      }else if(data.type === 'delete_game'){
+        debugger
+        // TODO: show a popup
+        this.props.history.push('/')
       }
 
     }})
@@ -228,6 +233,15 @@ class Room extends Component {
     return this.state.isReady && this.state.artistId!= ""
   }
 
+  deleteRoom = () => {
+    this.sub['game_'+this.room].send({
+      to: 'game_'+this.room,
+      type: 'delete_game',
+      user_id: localStorage.user_id,
+    })
+    this.props.history.push('/')
+  }
+
   render() {
 
     return(
@@ -238,7 +252,7 @@ class Room extends Component {
           { this.isLoaded() && this.isHost() && this.isPartOfRoom() && this.isGameStarted() ? <Button onClick={this.onClearCanvas}>Clear</Button>: "" }
           <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages ? this.state.messages : []}/>
         </div>
-        <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users ? this.state.users : []}/>
+        <UserListContainer deleteRoom={this.deleteRoom} clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users ? this.state.users : []}/>
 
        <Button onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
       </div>

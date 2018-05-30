@@ -27,6 +27,8 @@ class UserListContainer extends Component {
       <div id="user-container" className="ui celled list">
         {users}
         {parseInt(localStorage.user_id) === parseInt(this.props.hostId) ? <Button disabled={disabled} onClick={this.clickReady}>Start game</Button> : ""}
+        {parseInt(localStorage.user_id) === parseInt(this.props.hostId) ? <Button onClick={this.props.deleteRoom}>Delete room</Button> : ""}
+
       </div>
     )
   }
