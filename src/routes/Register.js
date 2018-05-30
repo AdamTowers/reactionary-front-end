@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Container, Segment } from 'semantic-ui-react'
+import { Container, Segment, Button } from 'semantic-ui-react'
 
 class Register extends Component {
   constructor(props){
@@ -43,8 +43,8 @@ class Register extends Component {
                   <input type="password" name="password" onChange={this.handleChange} value={this.state.password}/>
                 </div>
 
-                <button className="ui button" type="submit">Submit</button>
-                <button className="ui button" tabIndex="0" type="button" onClick={this.onLogin}>Login</button>
+                <Button primary type="submit">Submit</Button>
+                <Button secondary tabIndex="0" onClick={this.onLogin}>Login</Button>
               </form>
             </Segment>
           </Segment.Group>
