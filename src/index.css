@@ -57,8 +57,10 @@ display:block;
 }
 
 .visible.transition {
-  margin-top: auto !important;
+  margin-top: 0 auto !important;
   display: inline-block !important;
   position: relative;
-  top: 20%;
+  top: 50%;
+  width: 100%;
+
 }
