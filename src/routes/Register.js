@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
-import { Container, Segment, Button } from 'semantic-ui-react'
+import { Container, Segment, Button, Image } from 'semantic-ui-react'
+import logo from '../images/reactionary_logo.png'
 
 class Register extends Component {
   constructor(props){
@@ -29,6 +30,7 @@ class Register extends Component {
   render() {
     return (
       <Container text>
+        <Image src={logo} centered={true} />
         <Segment.Group>
           <Segment>
             <h1>Register</h1>

@@ -3,7 +3,10 @@ import UserListContainer from '../components/UserListContainer'
 import MessageListContainer from '../components/MessageListContainer'
 import CanvasContainer from '../components/CanvasContainer'
 import ActionCable from 'actioncable'
-import { Grid, Segment, Button } from 'semantic-ui-react'
+import { Grid, Segment, Button, Image } from 'semantic-ui-react'
+import logo from '../images/reactionary_logo.png'
+
+
 class Room extends Component {
   constructor(props){
     super(props)
@@ -192,23 +195,26 @@ class Room extends Component {
 
   render() {
     return(
-      <Grid columns={2} stackable>
-        <Grid.Column>
-          <Segment>
-            { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
-            { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <Button secondary size='tiny' onClick={this.clearCanvas}>Clear</Button>: "" }
-          </Segment>
-          <Segment>
-            <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
-            <Button secondary size='tiny' onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
-          </Segment>
-        </Grid.Column>
+      <div>
+        <Grid columns={1} stackable>
+          <Image src={logo} centered={true} />
+        </Grid>
 
-        <Grid.Column>
-          <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages}/>
-       </Grid.Column>
-     </Grid>
+        <Grid columns={2} stackable>
+          <Grid.Column>
+            <Segment>
+              { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
+              { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <Button secondary size='tiny' onClick={this.clearCanvas}>Clear</Button>: "" }
+              <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
+              <Button secondary size='tiny' onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
+            </Segment>
+          </Grid.Column>
 
+          <Grid.Column>
+            <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages}/>
+         </Grid.Column>
+       </Grid>
+      </div>
     )
   }
 

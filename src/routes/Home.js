@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import ActionCable from 'actioncable'
 import RoomListContainer from '../components/RoomListContainer'
 import CreateRoomModal from '../components/CreateRoomModal'
-import { Container, Segment } from 'semantic-ui-react'
+import { Container, Segment, Image } from 'semantic-ui-react'
+import logo from '../images/reactionary_logo.png'
 
 class Home extends Component {
   constructor(props){
@@ -111,6 +112,7 @@ class Home extends Component {
 
     return(
       <Container>
+        <Image src={logo} centered={true} />
         <Segment.Group>
           <Segment>
             <CreateRoomModal onChange={this.onChange} onSubmit={this.createRoom}/>
