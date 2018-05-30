@@ -12,7 +12,7 @@ const CreateRoomModal = (props) => {
               <label>Room Name</label>
               <input onChange={props.onChange} />
             </Form.Field>
-            <Button type='submit'>Create</Button>
+            <Button primary type='submit'>Create</Button>
           </Form>
 
         </Modal.Description>
