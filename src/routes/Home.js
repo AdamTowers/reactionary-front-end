@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import ActionCable from 'actioncable'
 import RoomListContainer from '../components/RoomListContainer'
 import CreateRoomModal from '../components/CreateRoomModal'
+import { Container, Segment } from 'semantic-ui-react'
 
 class Home extends Component {
   constructor(props){
@@ -109,10 +110,16 @@ class Home extends Component {
   render(){
 
     return(
-      <div>
-        <CreateRoomModal onChange={this.onChange} onSubmit={this.createRoom}/>
-        <RoomListContainer rooms={this.state.rooms} joinRoom={this.joinRoom.bind(this)} />
-      </div>
+      <Container>
+        <Segment.Group>
+          <Segment>
+            <CreateRoomModal onChange={this.onChange} onSubmit={this.createRoom}/>
+          </Segment>
+          <Segment>
+            <RoomListContainer rooms={this.state.rooms} joinRoom={this.joinRoom.bind(this)} />
+          </Segment>
+        </Segment.Group>
+      </Container>
     )
   }
 }

@@ -3,6 +3,7 @@ import RoomListItem from './RoomListItem'
 import 'semantic-ui-css/semantic.min.css';
 import ActionCable from 'actioncable'
 
+
 class RoomListContainer extends Component {
 
   constructor(props){
@@ -21,10 +22,8 @@ class RoomListContainer extends Component {
   render() {
     const items = this.props.rooms.map(r => <RoomListItem id={r.id} key={r.id} hostId={r.attributes['user-id']} onClick={this.joinRoom.bind(this)} users={r.relationships.users.data.length} room={r.attributes}/>)
     return(
-      <div className="roomlist-container">
-        <div className="ui middle aligned selection list">
-          {items}
-        </div>
+      <div>
+        {items}
       </div>
     )
   }

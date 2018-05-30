@@ -187,12 +187,11 @@ class Room extends Component {
     const canvas = document.getElementById('canvas')
     const context = canvas.getContext('2d')
     context.clearRect(0, 0, canvas.width, canvas.height);
-    
+
   }
 
   render() {
     return(
-
       <div id="room">
         <div id="top">
           { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
