@@ -187,7 +187,6 @@ class CanvasContainer extends Component {
     </div>
     )
   }
-
 }
 
 export default CanvasContainer;

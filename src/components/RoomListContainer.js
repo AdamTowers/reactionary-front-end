@@ -5,12 +5,8 @@ import ActionCable from 'actioncable'
 
 
 class RoomListContainer extends Component {
-
   constructor(props){
     super(props)
-  }
-
-  componentDidMount() {
   }
 
   joinRoom = (e) => {

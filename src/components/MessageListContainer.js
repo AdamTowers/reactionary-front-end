@@ -8,7 +8,6 @@ import { Segment, Button } from 'semantic-ui-react'
 class MessageListContainer extends Component {
   constructor(props){
     super(props)
-
   }
   componentDidMount(){
     this.props.setMessageLoaded()
@@ -28,7 +27,6 @@ class MessageListContainer extends Component {
       </Segment.Group>
     )
   }
-
 }
 
 export default MessageListContainer

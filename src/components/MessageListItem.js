@@ -7,7 +7,6 @@ class MessageListItem extends Component {
         <p><strong>{ this.props.message.username }:</strong> { this.props.message.content }</p>
     )
   }
-
 }
 
 export default MessageListItem

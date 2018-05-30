@@ -266,30 +266,10 @@ class Room extends Component {
             <MessageListContainer setMessageLoaded={this.setMessageLoaded} sendMessage={this.sendMessage.bind(this)} messages={this.state.messages ? this.state.messages : []} deleteRoom={this.deleteRoom} clickReady={this.clickReady} setUserLoaded={this.setUserLoaded}  users={this.state.users ? this.state.users : []} />
          </Grid.Column>
        </Grid>
-
-
-
-
+       
       </div>
     )
   }
-
 }
 
 export default Room
-
-
-//Old JSX, in case we can't fix the positioning of the canvas
-
-/*
-<div id="room">
-  <div id="top">
-    { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <CanvasContainer roomId={this.room} setUserLoaded={this.state.setUserLoaded} xOffset={this.xOffset} yOffset={this.yOffset}/> : "" }
-    { this.state.isUserListLoaded && this.state.isMessageListLoaded ? <Button onClick={this.clearCanvas}>Clear</Button>: "" }
-    <MessageListContainer sendMessage={this.sendMessage.bind(this)} setMessageLoaded={this.setMessageLoaded} messages={this.state.messages}/>
-  </div>
-  <UserListContainer clickReady={this.clickReady} hostId={this.state.host_id} setUserLoaded={this.setUserLoaded}  users={this.state.users}/>
-
- <Button onClick={this.leaveRoom.bind(this)}>Leave Room</Button>
-</div>
-*/

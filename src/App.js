@@ -46,21 +46,12 @@ class App extends Component {
         } else {
           json.forEach(error => alert(error))
         }
-
       });
   }
 
   joinRoom = (callback, route) => {
     callback(route)
   }
-
-  // TODO: Add a logout button somewhere and call this.
-  logout = () => {
-    localStorage.removeItem('user_id')
-    localStorage.removeItem('username')
-    localStorage.removeItem('token')
-  }
-
 
  render = () => {
    return (
@@ -76,7 +67,6 @@ class App extends Component {
     </div>
    )
  }
-
 }
 
 export default App;

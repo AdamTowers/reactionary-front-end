@@ -14,7 +14,6 @@ const CreateRoomModal = (props) => {
             </Form.Field>
             <Button primary type='submit'>Create</Button>
           </Form>
-
         </Modal.Description>
       </Modal.Content>
     </Modal>

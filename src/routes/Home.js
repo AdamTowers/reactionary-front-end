@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import ActionCable from 'actioncable'
 import RoomListContainer from '../components/RoomListContainer'
 import CreateRoomModal from '../components/CreateRoomModal'
-import { Container, Segment, Image } from 'semantic-ui-react'
+import { Container, Segment, Image, Button } from 'semantic-ui-react'
 import logo from '../images/reactionary_logo.png'
 
 class Home extends Component {
@@ -85,12 +85,9 @@ class Home extends Component {
       },
     })
 
-    //TODO: UNSUBSCRIBE
     this.sub['rooms_'+room_id].unsubscribe()
     delete this.sub['rooms_'+room_id]
 
-    // this.sub.unsubscribe()
-    // delete this.sub
     this.props.history.push('/room/'+room_id)
   }
 
@@ -126,19 +123,28 @@ class Home extends Component {
     })
   }
 
+  logout = () => {
+    localStorage.removeItem('user_id')
+    localStorage.removeItem('username')
+    localStorage.removeItem('token')
+
+    this.props.history.push('/login')
+  }
+
   render(){
+
     return(
       <Container>
         <Image src={logo} centered={true} />
         <Segment.Group>
           <Segment>
             <CreateRoomModal onChange={this.onChange} onSubmit={this.createRoom}/>
+            <Button onClick={this.logout}>Logout</Button>
             <h1>Available Rooms</h1>
             <RoomListContainer rooms={this.state.rooms} joinRoom={this.joinRoom.bind(this)} />
           </Segment>
         </Segment.Group>
       </Container>
-
     )
   }
 }

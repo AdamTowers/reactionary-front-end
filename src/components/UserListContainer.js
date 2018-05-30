@@ -11,7 +11,6 @@ class UserListContainer extends Component {
   }
 
   render() {
-
     const users = this.props.users.map(u => <UserListItem key={u.id} user={u.attributes} /> )
     return(
       <div>
